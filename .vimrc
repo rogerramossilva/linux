@@ -18,9 +18,3 @@ set completeopt=menu,preview  " Como mostrar as possibilidade de inserção
 set spelllang=pt              " Escolhe o dicionário
 
 filetype plugin indent on
-
-" Permite selecionar com SHIFT + SETA como no Windows
-set selectmode=mouse,key
-set mousemodel=popup
-set keymodel=startsel,stopsel
-set selection=exclusive
