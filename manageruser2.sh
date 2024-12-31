@@ -6,7 +6,7 @@ menu
 
 if [ $OPCAO -eq 1 ]; then
   nome
-  validaruser
+  validauser
   if [ $RC -eq 0 ]; then
     echo "usuario $NOME já existe"
   else
