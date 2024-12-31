@@ -4,6 +4,8 @@
 
 menu
 
+while [ $OPCAO -ne 0 ]; do
+
 if [ $OPCAO -eq 1 ]; then
   nome
   validauser
@@ -31,3 +33,11 @@ nome
 else
   echo "Opção invalida, Digite novamente"
 fi
+
+sleep 5
+
+clear
+
+menu
+
+done
