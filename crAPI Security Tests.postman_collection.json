@@ -1,0 +1,135 @@
+{
+	"info": {
+		"_postman_id": "53d21ee5-eb1f-4a03-aeae-374f693c9756",
+		"name": "crAPI Security Tests",
+		"description": "**crAPI Security Tests**",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "45944036"
+	},
+	"item": [
+		{
+			"name": "Login - Obter JWT",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let json = pm.response.json();",
+							"pm.environment.set(\"jwt_token\", json.token);",
+							"pm.test(\"Token presente na resposta\", function () {",
+							"    pm.expect(json).to.have.property(\"token\");",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"username\": \"user1\",\n  \"password\": \"user1\"\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/identity/login",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"identity",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Acesso sem token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status 401 quando sem autenticação\", function () {",
+							"    pm.response.to.have.status(401);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/user/profile",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"user",
+						"profile"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Acesso com token válido",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status 200 e possui campo 'username'\", function () {",
+							"    pm.response.to.have.status(200);",
+							"    var json = pm.response.json();",
+							"    pm.expect(json).to.have.property(\"username\");",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt_token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/api/user/profile",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"user",
+						"profile"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
