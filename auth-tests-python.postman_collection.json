@@ -1,0 +1,128 @@
+{
+  "info": {
+    "name": "Auth Tests Python",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Login - Obter JWT",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"username\": \"admin\", \"password\": \"admin\"}"
+        },
+        "url": {
+          "raw": "http://127.0.0.1:8888/api/identity/login",
+          "protocol": "http",
+          "host": [
+            "127.0.0.1"
+          ],
+          "port": "8888",
+          "path": [
+            "api",
+            "identity",
+            "login"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status 200 OK ou 405 Method Not Allowed', () => {",
+              "  pm.expect([200, 405]).to.include(pm.response.code);",
+              "});",
+              "if (pm.response.code === 200) {",
+              "  let json = pm.response.json();",
+              "  pm.test('Resposta JSON cont\u00e9m token', () => {",
+              "    pm.expect(json).to.have.property('token');",
+              "    pm.environment.set('jwt_token', json.token);",
+              "  });",
+              "}"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Acesso sem token",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://127.0.0.1:8888/api/user/profile",
+          "protocol": "http",
+          "host": [
+            "127.0.0.1"
+          ],
+          "port": "8888",
+          "path": [
+            "api",
+            "user",
+            "profile"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status 200 OK ou 401 Unauthorized', () => {",
+              "  pm.expect([200, 401]).to.include(pm.response.code);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Acesso com token v\u00e1lido",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{jwt_token}}"
+          }
+        ],
+        "url": {
+          "raw": "http://127.0.0.1:8888/api/user/profile",
+          "protocol": "http",
+          "host": [
+            "127.0.0.1"
+          ],
+          "port": "8888",
+          "path": [
+            "api",
+            "user",
+            "profile"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status 200 OK', () => {",
+              "  pm.response.to.have.status(200);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    }
+  ]
+}
