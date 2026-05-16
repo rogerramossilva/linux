@@ -7,6 +7,6 @@ server {
   proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
   proxy_set_header Host $http_host;
   location / {
-    proxy_pass http://lam.asf.com/;
+    proxy_pass http://192.168.1.20/;
   }
 }
